@@ -1,5 +1,8 @@
 package ui;
 import model.Car;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,13 +31,13 @@ public class MainMenu {
 
             switch (choice) {
                 case 1 -> fillManual(scanner);
-                case 2 -> System.out.println("Заглушка: чтение из файла");
+                case 2 -> fillFromFile(scanner);
                 case 3 -> fillRandom();
                 case 4 -> sortByModel();
                 case 5 -> sortByPower();
                 case 6 -> sortByYear();
                 case 7 -> printCar();
-                case 8 -> System.out.println("Заглушка: запись в файл");
+                case 8 -> saveToFile(scanner);
                 case 9 -> System.out.println("Выход.");
                 default -> System.out.println("Неверный выбор");
             }
@@ -54,7 +57,7 @@ public class MainMenu {
 
         Car car = new Car(model, power, year);
         cars.add(car);
-        System.out.println("машина добавлена. Всего машин: " + cars.size());
+        System.out.print("машина добавлена. Всего машин: " + cars.size());
     }
 
     private static void printCar() {
@@ -67,7 +70,7 @@ public class MainMenu {
         for (Car car : cars) {
             System.out.println(car);
         }
-        System.out.println("Всего машин: " + cars.size());
+        System.out.print("Всего машин: " + cars.size());
     }
 
     private static void sortByModel() {
@@ -108,5 +111,58 @@ public class MainMenu {
         cars.add(car);
 
         System.out.println("Добавлена новая рандомная машина: " + car);
+    }
+
+    private static void fillFromFile(Scanner scanner) {
+        System.out.print("Введите имя Файла: ");
+        String fileName = scanner.nextLine();
+
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(fileName));
+            if (lines.isEmpty()) {
+                System.out.println("Файл пустой");
+                return;
+            }
+            int count = 0;
+            for (String line : lines) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String model = parts[0].trim();
+                    int power = Integer.parseInt(parts[1].trim());
+                    int year = Integer.parseInt(parts[2].trim());
+                    Car car = new Car(model, power, year);
+                    cars.add(car);
+                    count++;
+                } else {
+                    System.out.println("Пропущена строка (не 3 поля): " + line);
+                }
+            }
+            System.out.println("Добавлено машин: " + count);
+        } catch (IOException e) {
+            System.out.print("Ошибка чтения файла: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: неверный формат числа в файле. " + e.getMessage());
+        }
+    }
+
+    private static void saveToFile(Scanner scanner) {
+        if (cars.isEmpty()) {
+            System.out.println("Список машин пуст.");
+            return;
+        }
+        System.out.println("Введите имя файла для сохранения: ");
+        String fileName = scanner.nextLine();
+
+        try {
+            List<String> lines = new ArrayList<>();
+            for (Car car : cars) {
+                String line = car.getModel() + ", " + car.getPower() + ", " + car.getYear();
+                lines.add(line);
+            }
+            Files.write(Paths.get(fileName), lines);
+            System.out.println("Машины записаны в файл: " + fileName);
+        } catch (IOException e) {
+            System.out.println("Ошибка записи в файл: " + e.getMessage());
+        }
     }
 }
