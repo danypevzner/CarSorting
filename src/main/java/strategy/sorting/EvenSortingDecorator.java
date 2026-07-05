@@ -19,11 +19,9 @@ public class EvenSortingDecorator implements SortStrategy{
 
         // Собираем только четные
         for (Car car : cars) {
-
             if (comparator.getValue(car) % 2 == 0) {
                 evenCars.add(car);
             }
-
         }
 
         strategy.sort(evenCars, comparator);

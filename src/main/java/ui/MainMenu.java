@@ -22,10 +22,12 @@ public class MainMenu {
             System.out.println("1. Ввод вручную");
             System.out.println("2. Заполнить из файла");
             System.out.println("3. Заполнить рандомно");
-            System.out.println("4. Сортировка");
-            System.out.println("5. Показать все машины");
-            System.out.println("6. Записать в файл");
-            System.out.println("0. Выход");
+            System.out.println("4. Сортировка по модели");
+            System.out.println("5. Сортировка по мощности");
+            System.out.println("6. Сортировка по году");
+            System.out.println("7. Показать все машины");
+            System.out.println("8. Записать в файл");
+            System.out.println("9. Выход");
             System.out.println("Выберите пункт: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -34,12 +36,12 @@ public class MainMenu {
                 case 1 -> fillManual(scanner);
                 case 2 -> fillFromFile(scanner);
                 case 3 -> fillRandom();
-                case 4 -> sorting();
-                //case 5 -> carSorting(new InsertionSortStrategy(), new CarPowerComparator());
-                //case 6 -> carSorting(new SelectionSortStrategy(), new CarYearComparator());
-                case 5 -> printCar();
-                case 6 -> saveToFile(scanner);
-                case 0 -> System.out.println("Выход.");
+                case 4 -> sortByModel();
+                case 5 -> sortByPower();
+                case 6 -> sortByYear();
+                case 7 -> printCar();
+                case 8 -> saveToFile(scanner);
+                case 9 -> System.out.println("Выход.");
                 default -> System.out.println("Неверный выбор");
             }
         } while (choice != 0);
