@@ -1,5 +1,8 @@
 package ui;
 import model.Car;
+import strategy.comparators.*;
+import strategy.sorting.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -41,7 +44,88 @@ public class MainMenu {
                 case 9 -> System.out.println("Выход.");
                 default -> System.out.println("Неверный выбор");
             }
-        } while (choice != 9);
+        } while (choice != 0);
+    }
+
+    private static void sorting() {
+
+        if (cars.isEmpty()) {
+            System.out.println("Список машин пуст.");
+            return;
+        }
+
+        Scanner scanner = new Scanner(System.in);
+
+        // Выбор алгоритма
+        System.out.println("\n=== Выбор алгоритма сортировки ===");
+        System.out.println("1. Пузырьковая сортировка");
+        System.out.println("2. Сортировка выбором");
+        System.out.println("3. Сортировка вставками");
+        System.out.print("Выберите пункт: ");
+
+        int algorithmChoice = scanner.nextInt();
+
+        SortStrategy sortStrategy;
+
+        switch (algorithmChoice) {
+            case 1:
+                sortStrategy = new BubbleSortStrategy();
+                break;
+            case 2:
+                sortStrategy = new SelectionSortStrategy();
+                break;
+            case 3:
+                sortStrategy = new InsertionSortStrategy();
+                break;
+            default:
+                System.out.println("Неверный выбор.");
+                return;
+        }
+
+        // Выбор режима
+        System.out.println("\n=== Режим сортировки ===");
+        System.out.println("1. Обычная");
+        System.out.println("2. Только объекты с четными значениями");
+        System.out.print("Выберите пункт: ");
+
+        int modeChoice = scanner.nextInt();
+
+        if (modeChoice == 2) {
+            sortStrategy = new EvenSortingDecorator(sortStrategy);
+        } else if (modeChoice != 1) {
+            System.out.println("Неверный выбор.");
+            return;
+        }
+
+        // Выбор поля
+        System.out.println("\n=== Поле сортировки ===");
+        System.out.println("1. Модель");
+        System.out.println("2. Мощность");
+        System.out.println("3. Год выпуска");
+        System.out.print("Выберите пункт: ");
+
+        int comparatorChoice = scanner.nextInt();
+
+        ComparatorStrategy comparator;
+
+        switch (comparatorChoice) {
+            case 1:
+                comparator = new CarModelComparator();
+                break;
+            case 2:
+                comparator = new CarPowerComparator();
+                break;
+            case 3:
+                comparator = new CarYearComparator();
+                break;
+            default:
+                System.out.println("Неверный выбор.");
+                return;
+        }
+
+        sortStrategy.sort(cars, comparator);
+
+        System.out.println("Сортировка успешно выполнена.");
     }
 
     private static void fillManual(Scanner scanner) {
@@ -57,7 +141,7 @@ public class MainMenu {
 
         Car car = new Car(model, power, year);
         cars.add(car);
-        System.out.print("машина добавлена. Всего машин: " + cars.size());
+        System.out.println("машина добавлена. Всего машин: " + cars.size());
     }
 
     private static void printCar() {
@@ -73,6 +157,7 @@ public class MainMenu {
         System.out.print("Всего машин: " + cars.size());
     }
 
+    @Deprecated
     private static void sortByModel() {
         if (cars.isEmpty()) {
             System.out.println("Список машин пуст.");
@@ -82,6 +167,7 @@ public class MainMenu {
         System.out.println("Сортировка по модели выполнена.");
     }
 
+    @Deprecated
     private static void sortByPower() {
         if (cars.isEmpty()) {
             System.out.println("Список машин пуст.");
@@ -91,6 +177,7 @@ public class MainMenu {
         System.out.println("Сортировка по мощности выполнена.");
     }
 
+    @Deprecated
     private static void sortByYear() {
         if (cars.isEmpty()) {
             System.out.println("Список машин пуст.");
