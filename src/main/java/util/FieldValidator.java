@@ -4,9 +4,9 @@ import java.time.LocalDate;
 
 public class FieldValidator {
     public static final double MAX_POWER = 3000;
-    public static final double MIN_POWER = 50;
+    public static final double MIN_POWER = 0;
     public static final int MODEL_MAX_LEN = 50;
-    public static final int MIN_YEAR = 1900;
+    public static final int MIN_YEAR = 1885;
 
     public static boolean validatePower(String  power){
         if ((power == null) || (power.isBlank())) return  false;
