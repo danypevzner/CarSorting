@@ -34,10 +34,10 @@ public class FileUtil {
 
             try {
                 String model = values[0].trim();
-                int year = Integer.parseInt(values[1].trim());
-                int price = Integer.parseInt(values[2].trim());
+                int power = Integer.parseInt(values[1].trim());
+                int year = Integer.parseInt(values[2].trim());
 
-                result.add(new Car(model, year, price));
+                result.add(new Car(model, power,year));
             } catch (NumberFormatException e) {
                 throw new IOException("Ошибка парсинга строки:"+line);
             }
@@ -80,10 +80,4 @@ public class FileUtil {
                 writer.newLine();
         }
     }
-
-
-
-
-
-
 }
