@@ -11,9 +11,6 @@ public class Car {
         this.year = year;
     }
 
-    public Car() {
-    }
-
     public String getModel() {
         return model;
     }
@@ -26,17 +23,5 @@ public class Car {
 
     public String toString() {
         return getModel() + " " + getPower() + " " + getYear();
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public void setPower(int power) {
-        this.power = power;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 }
