@@ -1,8 +1,10 @@
-package strategy;
+package strategy.sorting;
+
+import model.Car;
+import strategy.comparators.ComparatorStrategy;
 
 import java.util.List;
-import model.Car;
 
 public interface SortStrategy {
-    public void sort(List<Car> cars);
+    void sort(List<Car> cars, ComparatorStrategy comparator);
 }
