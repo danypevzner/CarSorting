@@ -19,7 +19,7 @@ public class EvenSortingDecorator implements SortStrategy{
 
         // Собираем только четные
         for (Car car : cars) {
-            if (comparator.getValue(car) % 2 == 0) {
+            if (comparator.isEven(car)) {
                 evenCars.add(car);
             }
         }
@@ -30,7 +30,7 @@ public class EvenSortingDecorator implements SortStrategy{
         int evenIndex = 0;
 
         for (int i = 0; i < cars.size(); i++) {
-            if (comparator.getValue(cars.get(i)) % 2 == 0) {
+            if (comparator.isEven(cars.get(i))) {
                 cars.set(i, evenCars.get(evenIndex++));
             }
 
