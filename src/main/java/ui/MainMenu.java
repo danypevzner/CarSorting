@@ -58,7 +58,8 @@ public class MainMenu {
                 case 3 -> {
                     Car car = RandomUtil.fillRandom();
                     cars.add(car);
-                    System.out.println("Добавлена новая рандомная машина: " + car);
+                    System.out.println("Добавлена новая рандомная машина: "
+                            + car.getModel() + " " + String.format("%.1f", car.getPower()) + " л.с., " + car.getYear() + " г.\n");
                 }
                 case 4 -> printCar();
                 case 5 -> {
@@ -192,7 +193,7 @@ public class MainMenu {
                 if (FieldValidator.validatePower(String.valueOf(power))) {
                     break;
                 }
-                System.out.println("Ошибка: мощность должна быть от 50 до 500 л.с. Попробуйте снова.");
+                System.out.println("Ошибка: мощность должна быть от 5 до 500 л.с. Попробуйте снова.");
             } catch (java.util.InputMismatchException e) {
                 System.out.println("Ошибка: введите целое число.");
                 scanner.nextLine();
@@ -228,7 +229,7 @@ public class MainMenu {
         }
 
         for (Car car : cars) {
-            System.out.println(car);
+            System.out.println(car.getModel() + " " + String.format("%.1f", car.getPower()) + " л.с., " + car.getYear() + " г.");
         }
         System.out.println("Всего машин: " + cars.size() + "\n");
     }
@@ -269,9 +270,9 @@ public class MainMenu {
     private static void loadFromAutoSave() {
         try {
             cars = FileUtil.readFile(AUTO_SAVE_FILE);
-            System.out.println("Автозагрузка: загружено " + cars.size() + " машин.");
+            System.out.println("Автозагрузка: загружено " + cars.size() + " машин.\n");
         } catch (IOException e) {
-            System.out.println("Файл автосохранения не найден");
+            System.out.println("Файл автосохранения не найден\n");
         }
     }
 
@@ -279,7 +280,6 @@ public class MainMenu {
         try {
             FileUtil.writeFile(cars, AUTO_SAVE_FILE);
             System.out.println("Автосохранение: сохранено " + cars.size() + " машин.");
-
         } catch (IOException e) {
             System.out.println("Ошибка автосохранения: " + e.getMessage());
         }
