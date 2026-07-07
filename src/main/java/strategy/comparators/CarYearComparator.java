@@ -9,7 +9,7 @@ public class CarYearComparator implements ComparatorStrategy {
     }
 
     @Override
-    public int getValue(Car car) {
-        return car.getYear();
+    public boolean isEven(Car car) {
+        return car.getYear() % 2 == 0;
     }
 }
