@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class FieldValidator {
     public static final double MAX_POWER = 3000;
-    public static final double MIN_POWER = 50;
+    public static final double MIN_POWER = 5;
     public static final int MODEL_MAX_LEN = 50;
     public static final int MIN_YEAR = 1900;
 

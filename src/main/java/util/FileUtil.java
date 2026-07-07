@@ -34,8 +34,20 @@ public class FileUtil {
 
             try {
                 String model = values[0].trim();
-                int power = Integer.parseInt(values[1].trim());
+                Double power = Double.parseDouble(values[1].trim());
                 int year = Integer.parseInt(values[2].trim());
+
+                if (!FieldValidator.validateYear(String.valueOf(year))){
+                    throw new IOException("Incorrect year value:"+year);
+                }
+
+                if (!FieldValidator.validatePower(String.valueOf(power))){
+                    throw new IOException("Incorrect power value:"+power);
+                }
+
+                if (!FieldValidator.validateModel(String.valueOf(model))){
+                    throw new IOException("Incorrect model value:"+model);
+                }
 
                 result.add(new Car(model, power,year));
             } catch (NumberFormatException e) {
