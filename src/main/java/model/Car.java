@@ -90,7 +90,7 @@ public class Car implements Comparable<Car> {
             return this;
         }
 
-        public Builder setPower(double power) {
+        public Builder setPower(int power) {
             this.power = power;
             return this;
         }
