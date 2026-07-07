@@ -9,7 +9,7 @@ public class CarModelComparator implements ComparatorStrategy {
     }
 
     @Override
-    public int getValue(Car car) {
-        return car.getModel().length();
+    public boolean isEven(Car car) {
+        return car.getModel().length()%2 == 0;
     }
 }

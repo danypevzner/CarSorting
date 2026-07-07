@@ -9,7 +9,7 @@ public class CarPowerComparator implements ComparatorStrategy {
     }
 
     @Override
-    public int getValue(Car car) {
-        return (int) car.getPower();
+    public boolean isEven(Car car) {
+        return car.getPower()%2 == 0;
     }
 }
