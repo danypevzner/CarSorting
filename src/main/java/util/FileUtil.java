@@ -59,16 +59,25 @@ public class FileUtil {
     }
 
     public static void  writeFile(List<Car> carList,String filepath) throws IOException {
-        Path path = Path.of(filepath);
-
-        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
-
-            for (Car car : carList) {
-                String line = car.getModel() + ";" + car.getPower() + ";" + car.getYear();
-                writer.write(line);
-                writer.newLine();
+        try {
+            Path path = Path.of(filepath);
+            Path parentDir = path.getParent();
+            if (parentDir != null) {
+                Files.createDirectories(parentDir);
             }
+
+
+            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                for (Car car : carList) {
+                    String line = car.getModel() + ";" + car.getPower() + ";" + car.getYear();
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+        }catch (Exception e){
+            throw new IOException("Problem during writing file"+e.getCause());
         }
+
     }
 
     public static void  appendFile(List<Car> carList,String filepath) throws IOException {
