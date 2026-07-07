@@ -7,7 +7,7 @@ public class RandomUtil {
     public static Car fillRandom() {
         int modelIndex = (int) (Math.random() * MODELS.length);
         String model = MODELS[modelIndex];
-        int power = 50 + (int) (Math.random() * 451);
+        double power = 50 + (Math.random() * 451);
         int year = 1900 + (int) (Math.random() * 127);
         return new Car(model, power, year);
     }

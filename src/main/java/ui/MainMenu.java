@@ -167,7 +167,7 @@ public class MainMenu {
         System.out.println("Введите модель: ");
         String model = scanner.nextLine();
         System.out.println("Ведите мощность: ");
-        int power = scanner.nextInt();
+        double power = scanner.nextDouble();
         scanner.nextLine();
         System.out.println("Введите год: ");
         int year = scanner.nextInt();
@@ -235,7 +235,7 @@ public class MainMenu {
                 String[] parts = line.split(",");
                 if (parts.length == 3) {
                     String model = parts[0].trim();
-                    int power = Integer.parseInt(parts[1].trim());
+                    double power = Double.parseDouble(parts[1].trim());
                     int year = Integer.parseInt(parts[2].trim());
                     cars.add(new Car(model, power, year));
                 }

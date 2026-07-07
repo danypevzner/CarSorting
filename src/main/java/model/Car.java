@@ -6,10 +6,10 @@ import java.util.Objects;
 public class Car implements Comparable<Car> {
 
     private final String model;
-    private final int power;
+    private final double power;
     private final int yearProduction;
 
-    public Car(String model, int power, int yearProduction) {
+    public Car(String model, double power, int yearProduction) {
 
         this.model = model;
         this.power = power;
@@ -20,7 +20,7 @@ public class Car implements Comparable<Car> {
         return model;
     }
 
-    public int getPower() {
+    public double getPower() {
         return power;
     }
 
@@ -90,7 +90,7 @@ public class Car implements Comparable<Car> {
             return this;
         }
 
-        public Builder setPower(int power) {
+        public Builder setPower(double power) {
             this.power = power;
             return this;
         }
@@ -102,9 +102,7 @@ public class Car implements Comparable<Car> {
 
         public Car builder() {
 
-            return new Car( model, (int) power, yearProduction);
+            return new Car( model, power, yearProduction);
         }
-
     }
-
 }
