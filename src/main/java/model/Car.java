@@ -6,10 +6,10 @@ import java.util.Objects;
 public class Car implements Comparable<Car> {
 
     private final String model;
-    private final double power;
+    private final int power;
     private final int yearProduction;
 
-    public Car(String model, double power, int yearProduction) {
+    public Car(String model, int power, int yearProduction) {
 
         this.model = model;
         this.power = power;
@@ -20,11 +20,11 @@ public class Car implements Comparable<Car> {
         return model;
     }
 
-    public double getPower() {
+    public int getPower() {
         return power;
     }
 
-    public int getYearProduction() {
+    public int getYear() {
         return yearProduction;
     }
 
@@ -48,7 +48,7 @@ public class Car implements Comparable<Car> {
     @Override
     public int compareTo(Car car) {
 
-        return this.yearProduction - car.getYearProduction();
+        return this.yearProduction - car.getYear();
     }
 
     public static class CarModelComparator implements Comparator<Car> {
@@ -73,7 +73,7 @@ public class Car implements Comparable<Car> {
         @Override
         public int compare(Car o1, Car o2) {
 
-            return o1.getYearProduction() - o2.getYearProduction();
+            return o1.getYear() - o2.getYear();
         }
     }
 
@@ -102,7 +102,7 @@ public class Car implements Comparable<Car> {
 
         public Car builder() {
 
-            return new Car( model, power, yearProduction);
+            return new Car( model, (int) power, yearProduction);
         }
 
     }
