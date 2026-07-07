@@ -229,17 +229,7 @@ public class MainMenu {
 
     private static void loadFromAutoSave() {
         try {
-            List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Paths.get(AUTO_SAVE_FILE));
-            if (lines.isEmpty()) return;
-            for (String line : lines) {
-                String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    String model = parts[0].trim();
-                    double power = Double.parseDouble(parts[1].trim());
-                    int year = Integer.parseInt(parts[2].trim());
-                    cars.add(new Car(model, power, year));
-                }
-            }
+            cars = FileUtil.readFile(AUTO_SAVE_FILE);
             System.out.println("Автозагрузка: загружено " + cars.size() + " машин.");
         } catch (IOException e) {
             System.out.println("Файл автосохранения не найден");
@@ -248,12 +238,9 @@ public class MainMenu {
 
     private static void autoSave() {
         try {
-            List<String> lines = new ArrayList<>();
-            for (Car car : cars) {
-                lines.add(car.getModel() + ", " + car.getPower() + ", " + car.getYear());
-            }
-            java.nio.file.Files.write(java.nio.file.Paths.get(AUTO_SAVE_FILE), lines);
+            FileUtil.writeFile(cars, AUTO_SAVE_FILE);
             System.out.println("Автосохранение: сохранено " + cars.size() + " машин.");
+
         } catch (IOException e) {
             System.out.println("Ошибка автосохранения: " + e.getMessage());
         }
