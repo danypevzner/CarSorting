@@ -4,6 +4,7 @@ import model.Car;
 import strategy.comparators.*;
 import strategy.sorting.*;
 import util.FileUtil;
+import util.RandomUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +48,11 @@ public class MainMenu {
                         System.out.println("Ошибка чтения файла: " + e.getMessage());
                     }
                 }
-                case 3 -> fillRandom();
+                case 3 -> {
+                    Car car = RandomUtil.fillRandom();
+                    cars.add(car);
+                    System.out.println("Добавлена новая рандомная машина: " + car);
+                }
                 case 4 -> sortByModel();
                 case 5 -> sortByPower();
                 case 6 -> sortByYear();
@@ -220,19 +225,6 @@ public class MainMenu {
         ComparatorStrategy comparator = new CarYearComparator();
         strategy.sort(cars, comparator);
         System.out.println("Сортировка по году выполнена.");
-    }
-
-    private static void fillRandom() {
-        String[] models = {"Toyota", "BMW", "Tesla", "Lada", "Ford", "Audi"};
-        int modelIndex = (int) (Math.random() * models.length);
-        int power = 50 + (int) (Math.random() * 451);
-        int year = 1900 + (int) (Math.random() * 127);
-
-        String model = models[modelIndex];
-        Car car = new Car(model, power, year);
-        cars.add(car);
-
-        System.out.println("Добавлена новая рандомная машина: " + car);
     }
 
     private static void loadFromAutoSave() {
