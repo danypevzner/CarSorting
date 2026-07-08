@@ -1,20 +1,20 @@
 package util;
 
-import model.Car;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
+
+import collection.CarCollection;
+import model.Car;
 
 public class FileUtil {
 
-    public static List<Car> readFile(String filepath) throws IOException {
-        List<Car> result = new ArrayList<>();
+    public static CarCollection readFile(String filepath) throws IOException {
+        CarCollection result = new CarCollection();
         Path path = Path.of(filepath);
 
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -69,7 +69,7 @@ public class FileUtil {
 
             try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
                 for (Car car : carList) {
-                    String line = car.getModel() + ";" + car.getPower() + ";" + car.getYear();
+                    String line = car.model() + ";" + car.power() + ";" + car.yearOfProduction();
                     writer.write(line);
                     writer.newLine();
                 }
@@ -86,7 +86,7 @@ public class FileUtil {
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
 
             for (Car car : carList) {
-                String line = car.getModel() + ";" + car.getPower() + ";" + car.getYear();
+                String line = car.model() + ";" + car.power() + ";" + car.yearOfProduction();
                 writer.write(line);
                 writer.newLine();
             }
@@ -96,7 +96,7 @@ public class FileUtil {
     public static void  appendFile(Car car,String filepath) throws IOException {
         Path path = Path.of(filepath);
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
-                String line = car.getModel() + ";" + car.getPower() + ";" + car.getYear();
+                String line = car.model() + ";" + car.power() + ";" + car.yearOfProduction();
                 writer.write(line);
                 writer.newLine();
         }
