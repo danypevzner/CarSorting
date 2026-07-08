@@ -1,108 +1,58 @@
 package model;
 
-import java.util.Comparator;
 import java.util.Objects;
 
-public class Car implements Comparable<Car> {
-
-    private final String model;
-    private final double power;
-    private final int yearProduction;
-
-    public Car(String model, double power, int yearProduction) {
-
-        this.model = model;
-        this.power = power;
-        this.yearProduction = yearProduction;
+public record Car(
+    String model,
+    double power,
+    int yearOfProduction
+) {
+    private void assertModel(String value) {
+        if (value == null || value.isBlank()) {
+            throw new RuntimeException("Car model cannot be blank");
+        }
     }
 
-    public String getModel() {
-        return model;
+    private void assertPower(double value) {
+        if (value <= 0) {
+            throw new RuntimeException("Car power cannot be less or equal zero");
+        }
     }
 
-    public double getPower() {
-        return power;
+    private void assertYear(int value) {
+        if (value < 0) {
+            throw new RuntimeException("Car manufacturing year cannot be less than zero");
+        }
     }
 
-    public int getYear() {
-        return yearProduction;
+    public Car {
+        assertModel(model);
+        assertPower(power);
+        assertYear(yearOfProduction);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return Double.compare(power, car.power) == 0 && yearProduction == car.yearProduction && Objects.equals(model, car.model);
+        return Double.compare(power, car.power) == 0 && yearOfProduction == car.yearOfProduction && Objects.equals(model, car.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(model, power, yearProduction);
+        return Objects.hash(model, power, yearOfProduction);
     }
 
     @Override
     public String toString() {
-        return  model + " " + power + " л.с., " + yearProduction + " г.";
-    }
-
-    @Override
-    public int compareTo(Car car) {
-
-        return this.yearProduction - car.getYear();
-    }
-
-    public static class CarModelComparator implements Comparator<Car> {
-
-        @Override
-        public int compare(Car o1, Car o2) {
-
-            return o1.getModel().compareTo(o2.getModel());
-        }
-    }
-
-    public static class CarPowerComparator implements Comparator<Car> {
-
-        @Override
-        public int compare(Car o1, Car o2) {
-            return Double.compare(o1.power,o2.power);
-        }
-    }
-
-    public static class CarYearComparator implements Comparator<Car> {
-
-        @Override
-        public int compare(Car o1, Car o2) {
-
-            return o1.getYear() - o2.getYear();
-        }
-    }
-
-    //Паттерн Билдер
-    public static class Builder {
-
-        private String model;
-        private double power;
-        private int yearProduction;
-
-
-        public Builder setModel(String model) {
-            this.model = model;
-            return this;
-        }
-
-        public Builder setPower(double power) {
-            this.power = power;
-            return this;
-        }
-
-        public Builder setYear(int year) {
-            this.yearProduction = year;
-            return this;
-        }
-
-        public Car builder() {
-
-            return new Car( model, power, yearProduction);
-        }
+        return new StringBuffer()
+            .append("[")
+            .append(model())
+            .append(" | ")
+            .append(power())
+            .append(" л.с. | ")
+            .append(yearOfProduction())
+            .append("г.]")
+            .toString();
     }
 }
