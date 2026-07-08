@@ -23,7 +23,7 @@ public class SimpleCarBuilder implements ICarBuilder {
 
     @Override
     public ICarBuilder setPower(double power) {
-        this.power = power;
+        this.power = Math.round(power * 100d) / 100d;
         return this;
     }
 

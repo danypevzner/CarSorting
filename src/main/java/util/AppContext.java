@@ -5,7 +5,7 @@ import core.IApplicationContext;
 import model.Car;
 
 public class AppContext implements IApplicationContext {
-    private final IValidationSchema<CarField, Car> schema = new CarValidationSchema();
+    private final CarInvariants schema = new CarInvariants();
 
 	@Override
 	public ICarBuilder getBuilder() {
@@ -16,5 +16,10 @@ public class AppContext implements IApplicationContext {
 	public IValidationSchema<CarField, Car> getValidationSchema() {
 		return schema;
 	}
+
+    @Override
+    public ICarFactory getFactory() {
+        return new RandomCarFactory(schema);
+    }
 
 }

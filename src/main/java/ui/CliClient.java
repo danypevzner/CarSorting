@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import collection.CarCollection;
 import core.CarField;
@@ -12,7 +14,6 @@ import core.IUiClient;
 import core.Sorting;
 import model.Car;
 import util.FileUtil;
-import util.RandomUtil;
 import util.Result;
 
 public class CliClient implements IUiClient {
@@ -246,6 +247,24 @@ public class CliClient implements IUiClient {
         }
     }
 
+    private void fillRandom() {
+        int amount;
+        while (true) {
+            amount = readAsInt("Введите количество машин для генерации: ");
+            if (amount > 0) {
+                break;
+            }
+            System.out.println("Количество не  может быть 0 или отрицательным");
+        }
+
+        var carFactory = context.getFactory();
+        List<Car> generatedCars = IntStream.generate(() -> 1).limit(amount)
+            .mapToObj(i -> carFactory.create())
+            .collect(Collectors.toList());
+        cars.addAll(generatedCars);
+        System.out.println("Добавлено " + generatedCars.size() + " машин");
+    }
+
     @Override
     public void start() {
         loadFromAutoSave();
@@ -254,7 +273,7 @@ public class CliClient implements IUiClient {
             System.out.println("=== Меню ===");
             System.out.println("1. Добавить машину вручную");
             System.out.println("2. Загрузить машины из файла");
-            System.out.println("3. Сгенерировать случайную машину");
+            System.out.println("3. Сгенерировать случайные машины");
             System.out.println("4. Показать все машины");
             System.out.println("5. Сохранить список машин в файл");
             System.out.println("6. Сортировка по модели");
@@ -285,12 +304,7 @@ public class CliClient implements IUiClient {
                         System.out.println("Ошибка чтения файла: " + e.getMessage());
                     }
                 }
-                case 3 -> {
-                    Car car = RandomUtil.fillRandom();
-                    cars.add(car);
-                    System.out.println("Добавлена новая рандомная машина: "
-                            + car.model() + " " + String.format("%.1f", car.power()) + " л.с., " + car.yearOfProduction() + " г.\n");
-                }
+                case 3 -> fillRandom();
                 case 4 -> printCar();
                 case 5 -> {
                     if (cars.isEmpty()) {
