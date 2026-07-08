@@ -1,14 +1,18 @@
-import model.Car;
-import org.testng.annotations.Test;
-import strategy.comparators.CarModelComparator;
-import strategy.comparators.CarPowerComparator;
-import strategy.comparators.CarYearComparator;
-import strategy.sorting.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import org.testng.annotations.Test;
+
+import model.Car;
+import strategy.comparators.CarModelComparator;
+import strategy.comparators.CarPowerComparator;
+import strategy.comparators.CarYearComparator;
+import strategy.sorting.BubbleSortStrategy;
+import strategy.sorting.EvenSortingDecorator;
+import strategy.sorting.InsertionSortStrategy;
+import strategy.sorting.SelectionSortStrategy;
+import strategy.sorting.SortStrategy;
 
 public class SortTest {
 
@@ -31,9 +35,9 @@ public class SortTest {
         SortStrategy strategy = new BubbleSortStrategy();
         strategy.sort(cars, new CarModelComparator());
 
-        assertEquals(cars.get(0).getModel(), "Audi");
-        assertEquals(cars.get(1).getModel(), "BMW");
-        assertEquals(cars.get(2).getModel(), "Mercedes");
+        assertEquals(cars.get(0).model(), "Audi");
+        assertEquals(cars.get(1).model(), "BMW");
+        assertEquals(cars.get(2).model(), "Mercedes");
     }
 
     @Test
@@ -43,9 +47,9 @@ public class SortTest {
         SortStrategy strategy = new BubbleSortStrategy();
         strategy.sort(cars, new CarPowerComparator());
 
-        assertEquals(cars.get(0).getPower(), 180);
-        assertEquals(cars.get(1).getPower(), 201);
-        assertEquals(cars.get(2).getPower(), 300);
+        assertEquals(cars.get(0).power(), 180);
+        assertEquals(cars.get(1).power(), 201);
+        assertEquals(cars.get(2).power(), 300);
     }
 
     @Test
@@ -55,9 +59,9 @@ public class SortTest {
         SortStrategy strategy = new BubbleSortStrategy();
         strategy.sort(cars, new CarYearComparator());
 
-        assertEquals(cars.get(0).getYear(), 2019);
-        assertEquals(cars.get(1).getYear(), 2020);
-        assertEquals(cars.get(2).getYear(), 2023);
+        assertEquals(cars.get(0).yearOfProduction(), 2019);
+        assertEquals(cars.get(1).yearOfProduction(), 2020);
+        assertEquals(cars.get(2).yearOfProduction(), 2023);
     }
 
     //================== Selection ==================
@@ -69,9 +73,9 @@ public class SortTest {
         SortStrategy strategy = new SelectionSortStrategy();
         strategy.sort(cars, new CarModelComparator());
 
-        assertEquals(cars.get(0).getModel(), "Audi");
-        assertEquals(cars.get(1).getModel(), "BMW");
-        assertEquals(cars.get(2).getModel(), "Mercedes");
+        assertEquals(cars.get(0).model(), "Audi");
+        assertEquals(cars.get(1).model(), "BMW");
+        assertEquals(cars.get(2).model(), "Mercedes");
     }
 
     @Test
@@ -81,9 +85,9 @@ public class SortTest {
         SortStrategy strategy = new SelectionSortStrategy();
         strategy.sort(cars, new CarPowerComparator());
 
-        assertEquals(cars.get(0).getPower(), 180);
-        assertEquals(cars.get(1).getPower(), 201);
-        assertEquals(cars.get(2).getPower(), 300);
+        assertEquals(cars.get(0).power(), 180);
+        assertEquals(cars.get(1).power(), 201);
+        assertEquals(cars.get(2).power(), 300);
     }
 
     @Test
@@ -93,9 +97,9 @@ public class SortTest {
         SortStrategy strategy = new SelectionSortStrategy();
         strategy.sort(cars, new CarYearComparator());
 
-        assertEquals(cars.get(0).getYear(), 2019);
-        assertEquals(cars.get(1).getYear(), 2020);
-        assertEquals(cars.get(2).getYear(), 2023);
+        assertEquals(cars.get(0).yearOfProduction(), 2019);
+        assertEquals(cars.get(1).yearOfProduction(), 2020);
+        assertEquals(cars.get(2).yearOfProduction(), 2023);
     }
 
     //================== Insertion ==================
@@ -107,9 +111,9 @@ public class SortTest {
         SortStrategy strategy = new InsertionSortStrategy();
         strategy.sort(cars, new CarModelComparator());
 
-        assertEquals(cars.get(0).getModel(), "Audi");
-        assertEquals(cars.get(1).getModel(), "BMW");
-        assertEquals(cars.get(2).getModel(), "Mercedes");
+        assertEquals(cars.get(0).model(), "Audi");
+        assertEquals(cars.get(1).model(), "BMW");
+        assertEquals(cars.get(2).model(), "Mercedes");
     }
 
     @Test
@@ -119,9 +123,9 @@ public class SortTest {
         SortStrategy strategy = new InsertionSortStrategy();
         strategy.sort(cars, new CarPowerComparator());
 
-        assertEquals(cars.get(0).getPower(), 180);
-        assertEquals(cars.get(1).getPower(), 201);
-        assertEquals(cars.get(2).getPower(), 300);
+        assertEquals(cars.get(0).power(), 180);
+        assertEquals(cars.get(1).power(), 201);
+        assertEquals(cars.get(2).power(), 300);
     }
 
     @Test
@@ -131,9 +135,9 @@ public class SortTest {
         SortStrategy strategy = new InsertionSortStrategy();
         strategy.sort(cars, new CarYearComparator());
 
-        assertEquals(cars.get(0).getYear(), 2019);
-        assertEquals(cars.get(1).getYear(), 2020);
-        assertEquals(cars.get(2).getYear(), 2023);
+        assertEquals(cars.get(0).yearOfProduction(), 2019);
+        assertEquals(cars.get(1).yearOfProduction(), 2020);
+        assertEquals(cars.get(2).yearOfProduction(), 2023);
     }
 
     //================== Дополнительное задание ==================
@@ -154,12 +158,12 @@ public class SortTest {
         strategy.sort(cars, new CarPowerComparator());
 
         // Нечетные остаются на местах
-        assertEquals(cars.get(0).getModel(), "BMW");
-        assertEquals(cars.get(2).getModel(), "Ford");
+        assertEquals(cars.get(0).model(), "BMW");
+        assertEquals(cars.get(2).model(), "Ford");
 
         // Четные отсортированы между собой
-        assertEquals(cars.get(1).getPower(), 180);
-        assertEquals(cars.get(3).getPower(), 300);
+        assertEquals(cars.get(1).power(), 180);
+        assertEquals(cars.get(3).power(), 300);
     }
 
     @Test
@@ -177,11 +181,11 @@ public class SortTest {
 
         strategy.sort(cars, new CarYearComparator());
 
-        assertEquals(cars.get(0).getYear(), 2021);
-        assertEquals(cars.get(2).getYear(), 2019);
+        assertEquals(cars.get(0).yearOfProduction(), 2021);
+        assertEquals(cars.get(2).yearOfProduction(), 2019);
 
-        assertEquals(cars.get(1).getYear(), 2018);
-        assertEquals(cars.get(3).getYear(), 2020);
+        assertEquals(cars.get(1).yearOfProduction(), 2018);
+        assertEquals(cars.get(3).yearOfProduction(), 2020);
     }
 
     @Test
@@ -202,11 +206,11 @@ public class SortTest {
 
         System.out.println("После сортировки:");
 
-        assertEquals(cars.get(0).getModel(), "BMW");
-        assertEquals(cars.get(1).getModel(), "Audi");
-        assertEquals(cars.get(2).getModel(), "Kia");
-        assertEquals(cars.get(3).getModel(), "Ford");
-        assertEquals(cars.get(4).getModel(), "Toyota");
+        assertEquals(cars.get(0).model(), "BMW");
+        assertEquals(cars.get(1).model(), "Audi");
+        assertEquals(cars.get(2).model(), "Kia");
+        assertEquals(cars.get(3).model(), "Ford");
+        assertEquals(cars.get(4).model(), "Toyota");
     }
 
 }

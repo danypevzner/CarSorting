@@ -1,13 +1,14 @@
-import model.Car;
-import org.testng.annotations.Test;
-import org.testng.Assert;
-import util.FileUtil;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import model.Car;
+import util.FileUtil;
 
 public class FileUtilTest {
 
@@ -25,13 +26,13 @@ public class FileUtilTest {
         List<Car> cars = FileUtil.readFile(file.toString());
 
         Assert.assertEquals(cars.size(), 2, "Должно быть прочитано 2 машины");
-        Assert.assertEquals(cars.get(0).getModel(), "Toyota");
-        Assert.assertEquals(cars.get(0).getYear(), 2000);
-        Assert.assertEquals(cars.get(0).getPower(), 100);
+        Assert.assertEquals(cars.get(0).model(), "Toyota");
+        Assert.assertEquals(cars.get(0).yearOfProduction(), 2000);
+        Assert.assertEquals(cars.get(0).power(), 100);
 
-        Assert.assertEquals(cars.get(1).getModel(), "BMW");
-        Assert.assertEquals(cars.get(1).getYear(), 1998);
-        Assert.assertEquals(cars.get(1).getPower(), 230);
+        Assert.assertEquals(cars.get(1).model(), "BMW");
+        Assert.assertEquals(cars.get(1).yearOfProduction(), 1998);
+        Assert.assertEquals(cars.get(1).power(), 230);
     }
 
     @Test(expectedExceptions = IOException.class)
