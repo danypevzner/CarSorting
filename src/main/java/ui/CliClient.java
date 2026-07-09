@@ -15,6 +15,7 @@ import core.Sorting;
 import model.Car;
 import util.FileUtil;
 import util.Result;
+import util.StringUtils;
 
 public class CliClient implements IUiClient {
 	private CarCollection cars = new CarCollection();
@@ -114,10 +115,7 @@ public class CliClient implements IUiClient {
 
         while (result == null) {
             System.out.println(prompt);
-
-            try {
-                result = Double.valueOf(scanner.nextLine());
-            } catch (NumberFormatException e){}
+            result = StringUtils.parseDouble(scanner.nextLine());
         }
 
         return result;
@@ -128,10 +126,7 @@ public class CliClient implements IUiClient {
 
         while (result == null) {
             System.out.println(prompt);
-
-            try {
-                result = Integer.valueOf(scanner.nextLine());
-            } catch (NumberFormatException e){}
+            result = StringUtils.parseInt(scanner.nextLine());
         }
 
         return result;
