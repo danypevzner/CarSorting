@@ -204,7 +204,7 @@ public class SortTest {
 
         strategy.sort(cars, new CarModelComparator());
 
-        System.out.println("После сортировки:");
+        //System.out.println("После сортировки:");
 
         assertEquals(cars.get(0).model(), "BMW");
         assertEquals(cars.get(1).model(), "Audi");

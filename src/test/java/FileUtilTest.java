@@ -61,7 +61,7 @@ public class FileUtilTest {
         FileUtil.writeFile(carList, tempFile.toString());
         List<String> lines = Files.readAllLines(tempFile, StandardCharsets.UTF_8);
         Assert.assertEquals(lines.size(), 2);
-        Assert.assertTrue(lines.get(0).contains("Audi;202;2020"));
+        Assert.assertTrue(lines.get(0).contains("Audi;202.0;2020"));
     }
 
     @Test
@@ -76,8 +76,8 @@ public class FileUtilTest {
 
         List<String> lines = Files.readAllLines(tempFile, StandardCharsets.UTF_8);
         Assert.assertEquals(lines.size(), 2);
-        Assert.assertTrue(lines.stream().anyMatch(l -> l.contains("Lada;88;1990")));
-        Assert.assertTrue(lines.stream().anyMatch(l -> l.contains("Kia;150;2026")));
+        Assert.assertTrue(lines.stream().anyMatch(l -> l.contains("Lada;88.0;1990")));
+        Assert.assertTrue(lines.stream().anyMatch(l -> l.contains("Kia;150.0;2026")));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class FileUtilTest {
         FileUtil.appendFile(car, tempFile.toString());
         List<String> lines = Files.readAllLines(tempFile, StandardCharsets.UTF_8);
         Assert.assertEquals(lines.size(), 1);
-        Assert.assertTrue(lines.get(0).contains("Hyundai;154;2001"));
+        Assert.assertTrue(lines.get(0).contains("Hyundai;154.0;2001"));
     }
 
     @Test

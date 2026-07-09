@@ -31,6 +31,16 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Source: https://mvnrepository.com/artifact/com.beust/jcommander -->
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.82</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+
 
     </dependencies>
 
