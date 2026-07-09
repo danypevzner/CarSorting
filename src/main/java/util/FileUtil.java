@@ -15,6 +15,7 @@ public class FileUtil {
 
     public static CarCollection readFile(String filepath) throws IOException {
         CarCollection result = new CarCollection();
+        SimpleCarBuilder builder = new SimpleCarBuilder(new CarInvariants());
         Path path = Path.of(filepath);
 
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -34,23 +35,24 @@ public class FileUtil {
 
             try {
                 String model = values[0].trim();
-                Double power = Double.parseDouble(values[1].trim());
-                int year = Integer.parseInt(values[2].trim());
+                if (model.isBlank()) throw new IOException("Car argument is blank or null");
+                Double power = StringUtils.parseDouble(values[1].trim());
+                int year = StringUtils.parseInt(values[2].trim());
+                Result<Car> built = builder
+                        .setModel(model)
+                        .setPower(power)
+                        .setYearOfProduction(year)
+                        .build();
 
-                if (!FieldValidator.validateYear(String.valueOf(year))){
-                    throw new IOException("Incorrect year value:"+year);
+                switch (built) {
+                    case Result.Ok(Car car) -> {
+                        result.add(car);
+                    }
+                    case Result.Failure(List<String> errors) -> {
+                        errors.forEach(System.out::println);
+                    }
                 }
-
-                if (!FieldValidator.validatePower(String.valueOf(power))){
-                    throw new IOException("Incorrect power value:"+power);
-                }
-
-                if (!FieldValidator.validateModel(String.valueOf(model))){
-                    throw new IOException("Incorrect model value:"+model);
-                }
-
-                result.add(new Car(model, power,year));
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 throw new IOException("Ошибка парсинга строки:"+line);
             }
         }
@@ -66,7 +68,6 @@ public class FileUtil {
                 Files.createDirectories(parentDir);
             }
 
-
             try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
                 for (Car car : carList) {
                     String line = car.model() + ";" + car.power() + ";" + car.yearOfProduction();
@@ -77,7 +78,6 @@ public class FileUtil {
         }catch (Exception e){
             throw new IOException("Problem during writing file"+e.getCause());
         }
-
     }
 
     public static void  appendFile(List<Car> carList,String filepath) throws IOException {
