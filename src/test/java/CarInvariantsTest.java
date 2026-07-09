@@ -4,7 +4,6 @@ import model.Car;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import util.CarInvariants;
-import util.FieldValidator;
 
 @Test
 public class CarInvariantsTest {

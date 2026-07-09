@@ -286,7 +286,7 @@ public class CliClient implements IUiClient {
             }
 
             Car targetCar = results.get(targetIndex);
-            var amount = cars.parallelStream().filter(targetCar::equals).count();
+            var amount = cars.count(targetCar);
 
             System.out.println("Машина " + targetCar + " встречается " + amount + " раз");
         }
