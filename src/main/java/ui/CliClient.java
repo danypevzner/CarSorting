@@ -265,6 +265,38 @@ public class CliClient implements IUiClient {
         System.out.println("Добавлено " + generatedCars.size() + " машин");
     }
 
+    private void countOccurrences() {
+        String search = readAsNonEmptyString("Найти машину: ");
+
+        List<Car> results = cars.stream()
+            .filter(car -> car.model().toLowerCase().contains(search)
+                || Double.toString(car.power()).contains(search)
+                || Integer.toString(car.yearOfProduction()).contains(search)
+            )
+            .toList();
+
+        if (results.isEmpty()) {
+            System.out.println("Нет подходящих элементов");
+        } else {
+            System.out.println("Найдено " + results.size() + " элементов:");
+            IntStream.range(0, results.size()).forEach(i -> System.out.println("[" + i + "]: " + results.get(i)));
+
+            int targetIndex;
+            while (true) {
+                targetIndex = readAsInt("Введите индекс элемента для поиска числа вхождений: ");
+                if (targetIndex >= 0) {
+                    break;
+                }
+                System.out.println("Индекс не  может быть отрицательным");
+            }
+
+            Car targetCar = results.get(targetIndex);
+            var amount = cars.parallelStream().filter(targetCar::equals).count();
+
+            System.out.println("Машина " + targetCar + " встречается " + amount + " раз");
+        }
+    }
+
     @Override
     public void start() {
         loadFromAutoSave();
@@ -324,7 +356,7 @@ public class CliClient implements IUiClient {
                 case 7 -> sortByPower();
                 case 8 -> sortByYear();
                 case 9 -> sorting();
-                case 10 -> System.out.println("Заглушка: многопоточный поиск");
+                case 10 -> countOccurrences();
                 case 11 -> {
                     autoSave();
                     System.out.println("Выход.");
