@@ -31,6 +31,10 @@ public class CarCollection extends ArrayList<Car> {
         strategy.sort(this, comparator);
     }
 
+    public long count(Car car) {
+        return this.parallelStream().filter(car::equals).count();
+    }
+
     private SortStrategy getSortingStrategy(Sorting sorting) {
         return switch (sorting) {
             case Sorting.BUBBLE -> new BubbleSortStrategy();
