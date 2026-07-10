@@ -191,8 +191,8 @@ public class CliClient implements IUiClient {
             return;
         }
 
-        for (Car car : cars) {
-            System.out.println(car);
+        for (int i = 0; i < cars.size(); i++) {
+            System.out.println((i + 1) + ". " + cars.get(i));
         }
         System.out.println("Всего машин: " + cars.size() + "\n");
     }
@@ -292,6 +292,37 @@ public class CliClient implements IUiClient {
         }
     }
 
+    private void removeAllCars() {
+        if (cars.isEmpty()) {
+            System.out.println("Список машин пуст. Удалять нечего.");
+            return;
+        }
+        System.out.print("Вы уверены, что хотите удалить все машины? (да/нет): ");
+        String confirm = scanner.nextLine();
+        if (confirm.equalsIgnoreCase("да")) {
+            cars.removeAllCars();
+            System.out.println("Все машины удалены.");
+        } else {
+            System.out.println("Удаление отменено.");
+        }
+    }
+
+    private void removeCarByIndex() {
+        if (cars.isEmpty()) {
+            System.out.println("Список машин пуст. Удалять нечего.");
+            return;
+        }
+        printCar();
+        int number = readAsInt("Введите номер машины для удаления: ");
+        int index = number - 1;
+        if (index < 0 || index >= cars.size()) {
+            System.out.println("Неверный номер.");
+            return;
+        }
+        Car removed = cars.remove(index);
+        System.out.println("Удалена машина: " + removed);
+    }
+
     @Override
     public void start() {
         loadFromAutoSave();
@@ -308,7 +339,9 @@ public class CliClient implements IUiClient {
             System.out.println("8. Сортировка по году");
             System.out.println("9. Расширенная сортировка");
             System.out.println("10. Поиск машин по модели (многопоточный)");
-            System.out.println("11. Выход");
+            System.out.println("11. Удалить одну машину");
+            System.out.println("12. Удалить все машины");
+            System.out.println("13. Выход");
             System.out.println("Выберите пункт: ");
             String input = scanner.nextLine();
             try {
@@ -336,7 +369,7 @@ public class CliClient implements IUiClient {
                 case 5 -> {
                     if (cars.isEmpty()) {
                         System.out.println("Список машин пуст.");
-                        return;
+                        break;
                     }
                     System.out.print("Введите имя файла для сохранения: ");
                     String fileName = scanner.nextLine();
@@ -352,13 +385,19 @@ public class CliClient implements IUiClient {
                 case 8 -> sortByYear();
                 case 9 -> sorting();
                 case 10 -> countOccurrences();
-                case 11 -> {
-                    autoSave();
+                case 11 -> removeCarByIndex();
+                case 12 -> removeAllCars();
+                case 13 -> {
+                    System.out.print("Сохранить изменения перед выходом? (да/нет): ");
+                    String answer = scanner.nextLine();
+                    if (answer.equalsIgnoreCase("да")) {
+                        autoSave();
+                    }
                     System.out.println("Выход.");
                 }
                 default -> System.out.println("Неверный выбор");
             }
-        } while (choice != 11);
+        } while (choice != 13);
     }
 
 	@Override

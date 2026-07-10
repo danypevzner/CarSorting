@@ -50,4 +50,12 @@ public class CarCollection extends ArrayList<Car> {
             case CarField.YEAR -> new CarYearComparator();
         };
     }
+
+    public void removeAllCars() {
+        this.clear();
+    }
+
+    public boolean removeCar(Car car) {
+        return this.remove(car);
+    }
 }
