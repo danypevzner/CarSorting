@@ -3,6 +3,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertThrows;
 import org.testng.annotations.Test;
 
 import model.Car;
@@ -14,6 +15,9 @@ public class CarTest {
         assertEquals(car.model(), "Tesla");
         assertEquals(car.power(), 500);
         assertEquals(car.yearOfProduction(), 2025);
+        assertThrows(() -> new Car("", 1, 2025));
+        assertThrows(() -> new Car("model", 0, 2025));
+        assertThrows(() -> new Car("model", 1, -1));
     }
 
     @Test
