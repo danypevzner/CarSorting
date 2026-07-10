@@ -22,6 +22,8 @@ public class CliClient implements IUiClient {
     private final IApplicationContext context;
     private final Scanner scanner = new Scanner(System.in);
     private static final String AUTO_SAVE_FILE = "autosave.txt";
+    private static final String LAST_FILE_RECORD = "lastFile.txt";
+    private String lastSavedFile = null;
 
     public CliClient(IApplicationContext context) {
         this.context = context;
@@ -224,19 +226,13 @@ public class CliClient implements IUiClient {
         System.out.println("Сортировка по году выполнена.");
     }
 
-    private void loadFromAutoSave() {
-        try {
-            cars = FileUtil.readFile(AUTO_SAVE_FILE);
-            System.out.println("Автозагрузка: загружено " + cars.size() + " машин.\n");
-        } catch (IOException e) {
-            System.out.println("Файл автосохранения не найден\n");
-        }
-    }
-
     private void autoSave() {
         try {
-            FileUtil.writeFile(cars, AUTO_SAVE_FILE);
-            System.out.println("Автосохранение: сохранено " + cars.size() + " машин.");
+            String targetFile = (lastSavedFile != null && !lastSavedFile.isBlank())
+                    ? lastSavedFile
+                    : AUTO_SAVE_FILE;
+            FileUtil.writeFile(cars, targetFile);
+            System.out.println("Автосохранение: сохранено " + cars.size() + " машин в " + targetFile);
         } catch (IOException e) {
             System.out.println("Ошибка автосохранения: " + e.getMessage());
         }
@@ -258,6 +254,22 @@ public class CliClient implements IUiClient {
             .collect(Collectors.toList());
         cars.addAll(generatedCars);
         System.out.println("Добавлено " + generatedCars.size() + " машин");
+    }
+
+    private boolean isYes(String input) {
+        String normalized = input.trim().toLowerCase();
+        return normalized.equals("да")
+                || normalized.equals("lf")
+                || normalized.equals("yes")
+                || normalized.equals("y");
+    }
+
+    private boolean isNo(String input) {
+        String normalized = input.trim().toLowerCase();
+        return normalized.equals("нет")
+                || normalized.equals("ytn")
+                || normalized.equals("no")
+                || normalized.equals("n");
     }
 
     private void countOccurrences() {
@@ -299,7 +311,7 @@ public class CliClient implements IUiClient {
         }
         System.out.print("Вы уверены, что хотите удалить все машины? (да/нет): ");
         String confirm = scanner.nextLine();
-        if (confirm.equalsIgnoreCase("да")) {
+        if (isYes(confirm)) {
             cars.removeAllCars();
             System.out.println("Все машины удалены.");
         } else {
@@ -323,9 +335,42 @@ public class CliClient implements IUiClient {
         System.out.println("Удалена машина: " + removed);
     }
 
+    private void saveLastFileName() {
+        try {
+            java.nio.file.Files.writeString(
+                    java.nio.file.Paths.get(LAST_FILE_RECORD),
+                    lastSavedFile
+            );
+        } catch (IOException e) {}
+    }
+    private void loadLastFileName() {
+        try {
+            java.nio.file.Path path = java.nio.file.Paths.get(LAST_FILE_RECORD);
+            if (java.nio.file.Files.exists(path)) {
+                lastSavedFile = java.nio.file.Files.readString(path).trim();
+            }
+        } catch (IOException e) {}
+    }
+
     @Override
     public void start() {
-        loadFromAutoSave();
+        loadLastFileName();
+        System.out.print("Загрузить последний сохранённый файл? (да/нет): ");
+        String answer = scanner.nextLine();
+        if (isYes(answer)) {
+            if (lastSavedFile != null && !lastSavedFile.isBlank()) {
+                try {
+                    cars = FileUtil.readFile(lastSavedFile);
+                    System.out.println("Загружено машин: " + cars.size());
+                } catch (IOException e) {
+                    System.out.println("Ошибка загрузки: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Нет сохранённого файла. Запуск с пустым списком.");
+            }
+        } else {
+            System.out.println("Запуск с пустым списком.");
+        }
         int choice;
         do {
             System.out.println("=== Меню ===");
@@ -375,7 +420,9 @@ public class CliClient implements IUiClient {
                     String fileName = scanner.nextLine();
                     try {
                         FileUtil.writeFile(cars, fileName);
+                        lastSavedFile = fileName;
                         System.out.println("Машины записаны в файл: " + fileName);
+                        saveLastFileName();
                     } catch (IOException e) {
                         System.out.println("Ошибка записи: " + e.getMessage());
                     }
@@ -389,8 +436,12 @@ public class CliClient implements IUiClient {
                 case 12 -> removeAllCars();
                 case 13 -> {
                     System.out.print("Сохранить изменения перед выходом? (да/нет): ");
-                    String answer = scanner.nextLine();
-                    if (answer.equalsIgnoreCase("да")) {
+                    String saveChoice = scanner.nextLine();
+                    while (saveChoice.isBlank()) {
+                        System.out.print("Введите 'да' или 'нет': ");
+                        saveChoice = scanner.nextLine();
+                    }
+                    if (isYes(saveChoice)) {
                         autoSave();
                     }
                     System.out.println("Выход.");
