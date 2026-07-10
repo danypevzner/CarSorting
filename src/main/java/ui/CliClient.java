@@ -24,6 +24,7 @@ public class CliClient implements IUiClient {
     private static final String AUTO_SAVE_FILE = "autosave.txt";
     private static final String LAST_FILE_RECORD = "lastFile.txt";
     private String lastSavedFile = null;
+    private CarCollection history = null;
 
     public CliClient(IApplicationContext context) {
         this.context = context;
@@ -101,6 +102,22 @@ public class CliClient implements IUiClient {
         System.out.println("Сортировка успешно выполнена.");
     }
 
+    private void saveState() {
+        history = new CarCollection();
+        history.addAll(cars);
+    }
+
+    private void undo() {
+        if (history == null || history.isEmpty()) {
+            System.out.println("Нет действий для отмены.");
+            return;
+        }
+        cars.clear();
+        cars.addAll(history);
+        history = null;
+        System.out.println("Последнее действие отменено.");
+    }
+
     private String readAsNonEmptyString(String prompt) {
         String result = null;
 
@@ -135,6 +152,7 @@ public class CliClient implements IUiClient {
     }
 
     private void fillManual() {
+        saveState();
         System.out.println("--- Ручной ввод ---");
         var validationSchema = context.getValidationSchema();
 
@@ -239,6 +257,7 @@ public class CliClient implements IUiClient {
     }
 
     private void fillRandom() {
+        saveState();
         int amount;
         while (true) {
             amount = readAsInt("Введите количество машин для генерации: ");
@@ -312,6 +331,7 @@ public class CliClient implements IUiClient {
         System.out.print("Вы уверены, что хотите удалить все машины? (да/нет): ");
         String confirm = scanner.nextLine();
         if (isYes(confirm)) {
+            saveState();
             cars.removeAllCars();
             System.out.println("Все машины удалены.");
         } else {
@@ -331,6 +351,7 @@ public class CliClient implements IUiClient {
             System.out.println("Неверный номер.");
             return;
         }
+        saveState();
         Car removed = cars.remove(index);
         System.out.println("Удалена машина: " + removed);
     }
@@ -386,7 +407,8 @@ public class CliClient implements IUiClient {
             System.out.println("10. Поиск машин по модели (многопоточный)");
             System.out.println("11. Удалить одну машину");
             System.out.println("12. Удалить все машины");
-            System.out.println("13. Выход");
+            System.out.println("13. Отменить последнее действие");
+            System.out.println("14. Выход");
             System.out.println("Выберите пункт: ");
             String input = scanner.nextLine();
             try {
@@ -402,6 +424,7 @@ public class CliClient implements IUiClient {
                     System.out.print("Введите имя файла: ");
                     String fileName = scanner.nextLine();
                     try {
+                        saveState();
                         List<Car> loaded = FileUtil.readFile(fileName);
                         cars.addAll(loaded);
                         System.out.println("Загружено машин: " + loaded.size());
@@ -434,7 +457,8 @@ public class CliClient implements IUiClient {
                 case 10 -> countOccurrences();
                 case 11 -> removeCarByIndex();
                 case 12 -> removeAllCars();
-                case 13 -> {
+                case 13 -> undo();
+                case 14 -> {
                     System.out.print("Сохранить изменения перед выходом? (да/нет): ");
                     String saveChoice = scanner.nextLine();
                     while (saveChoice.isBlank()) {
@@ -448,7 +472,7 @@ public class CliClient implements IUiClient {
                 }
                 default -> System.out.println("Неверный выбор");
             }
-        } while (choice != 13);
+        } while (choice != 14);
     }
 
 	@Override
