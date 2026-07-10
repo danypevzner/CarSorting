@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import collection.CarCollection;
+import collection.UndoCarCollection;
 import core.CarField;
 import core.IApplicationContext;
 import core.IUiClient;
@@ -18,13 +19,12 @@ import util.Result;
 import util.StringUtils;
 
 public class CliClient implements IUiClient {
-	private CarCollection cars = new CarCollection();
+    private UndoCarCollection cars = new UndoCarCollection();
     private final IApplicationContext context;
     private final Scanner scanner = new Scanner(System.in);
     private static final String AUTO_SAVE_FILE = "autosave.txt";
     private static final String LAST_FILE_RECORD = "lastFile.txt";
     private String lastSavedFile = null;
-    private CarCollection history = null;
 
     public CliClient(IApplicationContext context) {
         this.context = context;
@@ -102,20 +102,13 @@ public class CliClient implements IUiClient {
         System.out.println("Сортировка успешно выполнена.");
     }
 
-    private void saveState() {
-        history = new CarCollection();
-        history.addAll(cars);
-    }
 
     private void undo() {
-        if (history == null || history.isEmpty()) {
+        if (cars.undo()) {
+            System.out.println("Последнее действие отменено.");
+        } else {
             System.out.println("Нет действий для отмены.");
-            return;
         }
-        cars.clear();
-        cars.addAll(history);
-        history = null;
-        System.out.println("Последнее действие отменено.");
     }
 
     private String readAsNonEmptyString(String prompt) {
@@ -152,7 +145,6 @@ public class CliClient implements IUiClient {
     }
 
     private void fillManual() {
-        saveState();
         System.out.println("--- Ручной ввод ---");
         var validationSchema = context.getValidationSchema();
 
@@ -257,7 +249,6 @@ public class CliClient implements IUiClient {
     }
 
     private void fillRandom() {
-        saveState();
         int amount;
         while (true) {
             amount = readAsInt("Введите количество машин для генерации: ");
@@ -331,7 +322,6 @@ public class CliClient implements IUiClient {
         System.out.print("Вы уверены, что хотите удалить все машины? (да/нет): ");
         String confirm = scanner.nextLine();
         if (isYes(confirm)) {
-            saveState();
             cars.removeAllCars();
             System.out.println("Все машины удалены.");
         } else {
@@ -351,7 +341,6 @@ public class CliClient implements IUiClient {
             System.out.println("Неверный номер.");
             return;
         }
-        saveState();
         Car removed = cars.remove(index);
         System.out.println("Удалена машина: " + removed);
     }
@@ -381,7 +370,9 @@ public class CliClient implements IUiClient {
         if (isYes(answer)) {
             if (lastSavedFile != null && !lastSavedFile.isBlank()) {
                 try {
-                    cars = FileUtil.readFile(lastSavedFile);
+                    CarCollection loaded = FileUtil.readFile(lastSavedFile);
+                    cars.clear();
+                    cars.addAll(loaded);
                     System.out.println("Загружено машин: " + cars.size());
                 } catch (IOException e) {
                     System.out.println("Ошибка загрузки: " + e.getMessage());
@@ -424,7 +415,6 @@ public class CliClient implements IUiClient {
                     System.out.print("Введите имя файла: ");
                     String fileName = scanner.nextLine();
                     try {
-                        saveState();
                         List<Car> loaded = FileUtil.readFile(fileName);
                         cars.addAll(loaded);
                         System.out.println("Загружено машин: " + loaded.size());
