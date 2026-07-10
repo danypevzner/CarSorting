@@ -1,15 +1,16 @@
-import com.beust.ah.A;
+import org.testng.Assert;
+import static org.testng.Assert.assertTrue;
+import org.testng.annotations.Test;
+
 import core.CarField;
 import model.Car;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import util.CarInvariants;
 
 @Test
 public class CarInvariantsTest {
     CarInvariants carInvariants = new CarInvariants();
 
-    public void testValidateFields() {
+    public void testValidateModel() {
         Assert.assertFalse(carInvariants.validateField(CarField.MODEL, "tesla").isPresent(), "Допустимая модель не прошла валидацию");
         Assert.assertFalse(carInvariants.validateField(CarField.MODEL, "3").isPresent(), "Допустимая модель не прошла валидацию");
         Assert.assertFalse(carInvariants.validateField(CarField.MODEL, "2CV").isPresent(), "Допустимая модель не прошла валидацию");
@@ -29,8 +30,6 @@ public class CarInvariantsTest {
         Assert.assertFalse(carInvariants.validateField(CarField.POWER,150).isPresent(),"Модель с допустимой мощностью не прошла валидацию");
         Assert.assertTrue(carInvariants.validateField(CarField.POWER,-12).isPresent(),"Модель с недопустимой мощностью прошла валидацию");
         Assert.assertTrue(carInvariants.validateField(CarField.POWER,500000).isPresent(),"Модель с недопустимой мощностью прошла валидацию");
-
-
     }
 
     public void testValidateCar(){
@@ -38,5 +37,22 @@ public class CarInvariantsTest {
         Car incorrect = new Car("Fake",1,20);
         Assert.assertFalse(carInvariants.validate(correct).isPresent(),"Корректная машина не прошла проверку");
         Assert.assertTrue(carInvariants.validate(incorrect).isPresent(),"Некорректная машина не прошла проверку");
+    }
+
+    public void testFieldValueGeneration() {
+        for (var i = 0; i < 100; i++) {
+            var result = carInvariants.validateField(CarField.MODEL, carInvariants.generateModelValue());
+            assertTrue(result.isEmpty());
+        }
+
+        for (var i = 0; i < 100; i++) {
+            var result = carInvariants.validateField(CarField.POWER, (Double)carInvariants.generatePowerValue());
+            assertTrue(result.isEmpty());
+        }
+
+        for (var i = 0; i < 100; i++) {
+            var result = carInvariants.validateField(CarField.YEAR, (Integer)carInvariants.generateYearOfProductionValue());
+            assertTrue(result.isEmpty());
+        }
     }
 }
