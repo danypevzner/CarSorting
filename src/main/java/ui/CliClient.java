@@ -285,7 +285,7 @@ public class CliClient implements IUiClient {
         String search = readAsNonEmptyString("Найти машину: ");
 
         List<Car> results = cars.stream()
-                .filter(car -> car.model().toLowerCase().contains(search)
+                .filter(car -> car.model().toLowerCase().contains(search.toLowerCase())
                         || Double.toString(car.power()).contains(search)
                         || Integer.toString(car.yearOfProduction()).contains(search)
                 )
@@ -394,7 +394,7 @@ public class CliClient implements IUiClient {
             System.out.println("7. Сортировка по мощности");
             System.out.println("8. Сортировка по году");
             System.out.println("9. Расширенная сортировка");
-            System.out.println("10. Поиск машин по модели (многопоточный)");
+            System.out.println("10. Поиск машин по полю (многопоточный)");
             System.out.println("11. Удалить одну машину");
             System.out.println("12. Удалить все машины");
             System.out.println("13. Отменить последнее действие");
