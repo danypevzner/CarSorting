@@ -179,20 +179,19 @@ public class CliClient implements IUiClient {
 
         var builder = context.getBuilder();
         Result<Car> result = builder
-            .setModel(model)
-            .setPower(power)
-            .setYearOfProduction(year)
-            .build();
+                .setModel(model)
+                .setPower(power)
+                .setYearOfProduction(year)
+                .build();
 
-        switch (result) {
-            case Result.Ok(Car car) -> {
-                cars.add(car);
-                System.out.print("машина добавлена. Всего машин: " + cars.size());
-            }
-            case Result.Failure(List<String> errors) -> {
-                System.out.println("При создании возникли ошибки:");
-                errors.stream().forEach(System.out::println);
-            }
+        if (result instanceof Result.Ok) {
+            Car car = ((Result.Ok<Car>) result).value();
+            cars.add(car);
+            System.out.print("машина добавлена. Всего машин: " + cars.size());
+        } else if (result instanceof Result.Failure) {
+            List<String> errors = ((Result.Failure) result).errors();
+            System.out.println("При создании возникли ошибки:");
+            errors.forEach(System.out::println);
         }
     }
 
@@ -260,8 +259,8 @@ public class CliClient implements IUiClient {
 
         var carFactory = context.getFactory();
         List<Car> generatedCars = IntStream.generate(() -> 1).limit(amount)
-            .mapToObj(i -> carFactory.create())
-            .collect(Collectors.toList());
+                .mapToObj(i -> carFactory.create())
+                .collect(Collectors.toList());
         cars.addAll(generatedCars);
         System.out.println("Добавлено " + generatedCars.size() + " машин");
     }
@@ -286,11 +285,11 @@ public class CliClient implements IUiClient {
         String search = readAsNonEmptyString("Найти машину: ");
 
         List<Car> results = cars.stream()
-            .filter(car -> car.model().toLowerCase().contains(search)
-                || Double.toString(car.power()).contains(search)
-                || Integer.toString(car.yearOfProduction()).contains(search)
-            )
-            .toList();
+                .filter(car -> car.model().toLowerCase().contains(search)
+                        || Double.toString(car.power()).contains(search)
+                        || Integer.toString(car.yearOfProduction()).contains(search)
+                )
+                .toList();
 
         if (results.isEmpty()) {
             System.out.println("Нет подходящих элементов");
@@ -465,9 +464,9 @@ public class CliClient implements IUiClient {
         } while (choice != 14);
     }
 
-	@Override
-	public void exit() {
-		scanner.close();
+    @Override
+    public void exit() {
+        scanner.close();
         System.exit(0);
-	}
+    }
 }

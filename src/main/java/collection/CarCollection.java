@@ -37,17 +37,17 @@ public class CarCollection extends ArrayList<Car> {
 
     private SortStrategy getSortingStrategy(Sorting sorting) {
         return switch (sorting) {
-            case Sorting.BUBBLE -> new BubbleSortStrategy();
-            case Sorting.INSERTION -> new InsertionSortStrategy();
-            case Sorting.SELECTION -> new SelectionSortStrategy();
+            case BUBBLE -> new BubbleSortStrategy();
+            case INSERTION -> new InsertionSortStrategy();
+            case SELECTION -> new SelectionSortStrategy();
         };
     }
 
     private ComparatorStrategy getComparator(CarField field) {
         return switch (field) {
-            case CarField.MODEL -> new CarModelComparator();
-            case CarField.POWER -> new CarPowerComparator();
-            case CarField.YEAR -> new CarYearComparator();
+            case MODEL -> new CarModelComparator();
+            case POWER -> new CarPowerComparator();
+            case YEAR -> new CarYearComparator();
         };
     }
 

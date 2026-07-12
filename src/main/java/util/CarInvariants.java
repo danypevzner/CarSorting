@@ -41,13 +41,13 @@ public class CarInvariants implements IValidationSchema<CarField, Car>, ICarFiel
     String stringVal = value.toString();
 
     switch (field) {
-        case CarField.MODEL -> {
+        case MODEL -> {
             return validateModel(stringVal);
           }
-        case CarField.POWER -> {
+        case POWER -> {
             return validatePower(Double.valueOf(stringVal));
           }
-        case CarField.YEAR -> {
+        case YEAR -> {
             return validateYear(Integer.valueOf(stringVal));
           }
     }

@@ -4,7 +4,6 @@ import model.Car;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 
 public class UndoCarCollection extends CarCollection {
     private final Deque<CarCollection> history = new ArrayDeque<>();

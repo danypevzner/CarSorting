@@ -44,13 +44,12 @@ public class FileUtil {
                         .setYearOfProduction(year)
                         .build();
 
-                switch (built) {
-                    case Result.Ok(Car car) -> {
-                        result.add(car);
-                    }
-                    case Result.Failure(List<String> errors) -> {
-                        errors.forEach(System.out::println);
-                    }
+                if (built instanceof Result.Ok) {
+                    Car car = ((Result.Ok<Car>) built).value();
+                    result.add(car);
+                } else if (built instanceof Result.Failure) {
+                    List<String> errors = ((Result.Failure) built).errors();
+                    errors.forEach(System.out::println);
                 }
             } catch (Exception e) {
                 throw new IOException("Ошибка парсинга строки:"+line);
