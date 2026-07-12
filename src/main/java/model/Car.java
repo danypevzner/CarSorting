@@ -3,9 +3,9 @@ package model;
 import java.util.Objects;
 
 public record Car(
-    String model,
-    double power,
-    int yearOfProduction
+        String model,
+        double power,
+        int yearOfProduction
 ) {
     private void assertModel(String value) {
         if (value == null || value.isBlank()) {
@@ -46,13 +46,13 @@ public record Car(
     @Override
     public String toString() {
         return new StringBuffer()
-            .append("[")
-            .append(model())
-            .append(" | ")
-            .append(power())
-            .append(" л.с. | ")
-            .append(yearOfProduction())
-            .append("г.]")
-            .toString();
+                .append("[")
+                .append(model())
+                .append(" | ")
+                .append(power())
+                .append(" л.с. | ")
+                .append(yearOfProduction())
+                .append("г.]")
+                .toString();
     }
 }
