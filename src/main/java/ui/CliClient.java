@@ -284,7 +284,7 @@ public class CliClient implements IUiClient {
     private void countOccurrences() {
         String search = readAsNonEmptyString("Найти машину: ");
 
-        List<Car> results = cars.stream()
+        List<Car> results = cars.parallelStream()
                 .filter(car -> car.model().toLowerCase().contains(search.toLowerCase())
                         || Double.toString(car.power()).contains(search)
                         || Integer.toString(car.yearOfProduction()).contains(search)
